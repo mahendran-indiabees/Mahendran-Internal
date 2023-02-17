@@ -11,27 +11,27 @@ Github Cli Package
 node
 {
 	try {
-			stage('Validate Parameters')
+		stage('Validate Parameters')
+		{
+			if(RepoName == null || RepoName == "")
 			{
-				if(RepoName == null || RepoName == "")
-				{
-					error("Repo Name should not be empty")
-				}
-				if(RepoDescription == null || RepoName == "")
-				{
-					error("Repo Description should not be empty")
-				}
-				echo "GitHub Repo Name : "+RepoName
-				echo "GiHub Repo Type : "+RepoType
-				echo "Repo Description : "+RepoDescription
+				error("Repo Name should not be empty")
 			}
-			stage('Repo Creation')
+			if(RepoDescription == null || RepoName == "")
 			{
-				withCredentials([string(credentialsId: 'GitHub_Token', variable: 'Github_Credentials')]) {
-					env.GH_TOKEN=Github_Credentials     
-					bat 'gh repo create '+RepoName+' --'+RepoType+' --description '+'"'+RepoDescription+'"'+' --add-readme'
-				}
+				error("Repo Description should not be empty")
 			}
+			echo "GitHub Repo Name : "+RepoName
+			echo "GiHub Repo Type : "+RepoType
+			echo "Repo Description : "+RepoDescription
+		}
+		stage('Repo Creation')
+		{
+			withCredentials([string(credentialsId: 'GitHub_Token', variable: 'Github_Credentials')]) {
+				env.GH_TOKEN=Github_Credentials     
+				bat 'gh repo create '+RepoName+' --'+RepoType+' --description '+'"'+RepoDescription+'"'+' --add-readme'
+			}
+		}
 	}
 	catch(Exception ex)
 	{
